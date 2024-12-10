@@ -23,7 +23,7 @@ final class SingularNode extends AbstractNode
         array $columns,
         array $primaryKeys,
         protected array $innerKeys,
-        ?array $outerKeys
+        ?array $outerKeys,
     ) {
         parent::__construct($columns, $outerKeys);
         $this->setDuplicateCriteria($primaryKeys);
@@ -46,7 +46,7 @@ final class SingularNode extends AbstractNode
             $this->container,
             $this->indexName,
             $this->intersectData($this->innerKeys, $data),
-            $data
+            $data,
         );
     }
 }

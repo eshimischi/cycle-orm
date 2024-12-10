@@ -6,7 +6,6 @@ namespace Cycle\ORM\Parser;
 
 use Cycle\ORM\Exception\ParserException;
 use Cycle\ORM\Parser\Traits\DuplicateTrait;
-use Throwable;
 
 /**
  * Represents data node in a tree with ability to parse line of results, split it into sub
@@ -72,19 +71,11 @@ abstract class AbstractNode
      */
     public function __construct(
         protected array $columns,
-        array $outerKeys = null
+        ?array $outerKeys = null,
     ) {
-        $this->indexName = empty($outerKeys) ? null : implode(':', $outerKeys);
+        $this->indexName = empty($outerKeys) ? null : \implode(':', $outerKeys);
         $this->outerKeys = $outerKeys ?? [];
         $this->indexedData = new MultiKeyCollection();
-    }
-
-    public function __destruct()
-    {
-        $this->parent = null;
-        $this->nodes = [];
-        $this->indexedData = null;
-        $this->duplicates = [];
     }
 
     /**
@@ -100,7 +91,7 @@ abstract class AbstractNode
         $relatedNodes = \array_merge(
             $this->mergeParent === null ? [] : [$this->mergeParent],
             $this->nodes,
-            $this->mergeSubclass
+            $this->mergeSubclass,
         );
 
         if ($this->isEmptyPrimaryKey($data)) {
@@ -108,7 +99,7 @@ abstract class AbstractNode
             return \count($this->columns)
                 + \array_reduce(
                     $relatedNodes,
-                    static fn (int $cnt, AbstractNode $node): int => $cnt + \count($node->columns),
+                    static fn(int $cnt, AbstractNode $node): int => $cnt + \count($node->columns),
                     0,
                 );
         }
@@ -117,7 +108,7 @@ abstract class AbstractNode
             foreach ($this->indexedData->getIndexes() as $index) {
                 try {
                     $this->indexedData->addItem($index, $data);
-                } catch (Throwable) {
+                } catch (\Throwable) {
                 }
             }
 
@@ -203,7 +194,7 @@ abstract class AbstractNode
         if ($node->indexName !== null) {
             foreach ($node->outerKeys as $key) {
                 // foreach ($node->indexValues->getIndex($this->indexName) as $key) {
-                if (!in_array($key, $this->columns, true)) {
+                if (!\in_array($key, $this->columns, true)) {
                     throw new ParserException("Unable to create reference, key `{$key}` does not exist.");
                 }
             }
@@ -260,6 +251,14 @@ abstract class AbstractNode
         }
     }
 
+    public function __destruct()
+    {
+        $this->parent = null;
+        $this->nodes = [];
+        $this->indexedData = null;
+        $this->duplicates = [];
+    }
+
     /**
      * Mount record data into internal data storage under specified container using reference key
      * (inner key) and reference criteria (outer key value).
@@ -289,7 +288,7 @@ abstract class AbstractNode
         }
 
         if ($this->indexedData->getItemsCount($index, $criteria) === 0) {
-            throw new ParserException(sprintf('Undefined reference `%s` "%s".', $index, implode(':', $criteria)));
+            throw new ParserException(\sprintf('Undefined reference `%s` "%s".', $index, \implode(':', $criteria)));
         }
 
         foreach ($this->indexedData->getItemsSubset($index, $criteria) as &$subset) {
@@ -330,7 +329,7 @@ abstract class AbstractNode
         }
 
         foreach ($this->indexedData->getItemsSubset($index, $criteria) as &$subset) {
-            if (!in_array($data, $subset[$container], true)) {
+            if (!\in_array($data, $subset[$container], true)) {
                 $subset[$container][] = &$data;
             }
         }
@@ -350,11 +349,11 @@ abstract class AbstractNode
         }
 
         if ($this->indexedData->getItemsCount($index, $criteria) === 0) {
-            throw new ParserException(sprintf('Undefined reference `%s` "%s".', $index, implode(':', $criteria)));
+            throw new ParserException(\sprintf('Undefined reference `%s` "%s".', $index, \implode(':', $criteria)));
         }
 
         foreach ($this->indexedData->getItemsSubset($index, $criteria) as &$subset) {
-            $subset = $overwrite ? array_merge($subset, $data) : array_merge($data, $subset);
+            $subset = $overwrite ? \array_merge($subset, $data) : \array_merge($data, $subset);
             unset($subset);
         }
     }
@@ -373,13 +372,13 @@ abstract class AbstractNode
             //Combine column names with sliced piece of row
             return \array_combine(
                 $this->columns,
-                \array_slice($line, $dataOffset, \count($this->columns))
+                \array_slice($line, $dataOffset, \count($this->columns)),
             );
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             throw new ParserException(
                 'Unable to parse incoming row: ' . $e->getMessage(),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
     }

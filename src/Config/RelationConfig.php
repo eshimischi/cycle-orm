@@ -17,24 +17,6 @@ final class RelationConfig extends InjectableConfig
     public const RELATION = 'relation';
     public const SCHEMA = 'schema';
 
-    public function getLoader(int|string $type): Autowire
-    {
-        if (!isset($this->config[$type][self::LOADER])) {
-            throw new ConfigException("Unable to get relation loader `{$type}`.");
-        }
-
-        return new Autowire($this->config[$type][self::LOADER]);
-    }
-
-    public function getRelation(int|string $type): Autowire
-    {
-        if (!isset($this->config[$type][self::RELATION])) {
-            throw new ConfigException("Unable to get relation `{$type}`.");
-        }
-
-        return new Autowire($this->config[$type][self::RELATION]);
-    }
-
     #[Pure]
     public static function getDefault(): self
     {
@@ -75,5 +57,23 @@ final class RelationConfig extends InjectableConfig
                 self::RELATION => Relation\Morphed\BelongsToMorphed::class,
             ],
         ]);
+    }
+
+    public function getLoader(int|string $type): Autowire
+    {
+        if (!isset($this->config[$type][self::LOADER])) {
+            throw new ConfigException("Unable to get relation loader `{$type}`.");
+        }
+
+        return new Autowire($this->config[$type][self::LOADER]);
+    }
+
+    public function getRelation(int|string $type): Autowire
+    {
+        if (!isset($this->config[$type][self::RELATION])) {
+            throw new ConfigException("Unable to get relation `{$type}`.");
+        }
+
+        return new Autowire($this->config[$type][self::RELATION]);
     }
 }

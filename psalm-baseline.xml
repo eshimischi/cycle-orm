@@ -18,7 +18,7 @@
   <file src="src/Collection/DoctrineCollectionFactory.php">
     <DocblockTypeContradiction>
       <code>$data instanceof PivotedStorage</code>
-      <code><![CDATA[is_a($this->class, PivotedCollection::class)]]></code>
+      <code><![CDATA[\is_a($this->class, PivotedCollection::class)]]></code>
       <code><![CDATA[throw new CollectionFactoryException('Unsupported iterable type.')]]></code>
     </DocblockTypeContradiction>
     <InvalidReturnStatement>
@@ -34,7 +34,7 @@
       <code>$class === Collection::class ? ArrayCollection::class : $class</code>
     </PropertyTypeCoercion>
     <TypeDoesNotContainType>
-      <code><![CDATA[is_a($this->class, PivotedCollection::class)]]></code>
+      <code><![CDATA[\is_a($this->class, PivotedCollection::class)]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/Collection/IlluminateCollectionFactory.php">
@@ -124,8 +124,8 @@
       <code>$value</code>
     </MixedAssignment>
     <MixedReturnTypeCoercion>
+      <code><![CDATA[\array_merge($this->columns, $this->mapper?->mapColumns($data) ?? $data)]]></code>
       <code>array</code>
-      <code><![CDATA[array_merge($this->columns, $this->mapper?->mapColumns($data) ?? $data)]]></code>
     </MixedReturnTypeCoercion>
     <PossiblyInvalidArgument>
       <code>$insertID</code>
@@ -148,11 +148,11 @@
       <code>$primaryKeys</code>
     </MixedArgument>
     <MixedReturnTypeCoercion>
-      <code>array</code>
-      <code><![CDATA[array_merge(
+      <code><![CDATA[\array_merge(
             $this->columns,
-            $this->mapper?->mapColumns($data) ?? $data
+            $this->mapper?->mapColumns($data) ?? $data,
         )]]></code>
+      <code>array</code>
     </MixedReturnTypeCoercion>
     <PossiblyNullArgument>
       <code><![CDATA[$this->table]]></code>
@@ -184,8 +184,8 @@
       <code>$callable</code>
     </PossiblyNullArgument>
     <PossiblyNullFunctionCall>
-      <code><![CDATA[Closure::bind($this->afterExecute, null, static::class)($this->command)]]></code>
-      <code><![CDATA[Closure::bind($this->beforeExecute, null, static::class)($this->command)]]></code>
+      <code><![CDATA[\Closure::bind($this->afterExecute, null, static::class)($this->command)]]></code>
+      <code><![CDATA[\Closure::bind($this->beforeExecute, null, static::class)($this->command)]]></code>
     </PossiblyNullFunctionCall>
     <UnsafeInstantiation>
       <code>new static($command)</code>
@@ -282,7 +282,7 @@
                 'name' => $relation,
                 'target' => $definition[Relation::TARGET],
                 'schema' => $definition[Relation::SCHEMA],
-            ]
+            ],
         )]]></code>
       <code><![CDATA[$this->config->getRelation($type)->resolve(
             $this->factory,
@@ -294,7 +294,7 @@
                 'schema' => $relSchema[Relation::SCHEMA]
                     + [Relation::LOAD => $relSchema[Relation::LOAD] ?? null]
                     + [Relation::COLLECTION_TYPE => $relSchema[Relation::COLLECTION_TYPE] ?? null],
-            ]
+            ],
         )]]></code>
     </LessSpecificReturnStatement>
     <MixedArgument>
@@ -357,10 +357,10 @@
   </file>
   <file src="src/Heap/Heap.php">
     <InvalidNullableReturnType>
-      <code>SplObjectStorage</code>
+      <code>\SplObjectStorage</code>
     </InvalidNullableReturnType>
     <MissingTemplateParam>
-      <code>IteratorAggregate</code>
+      <code>\IteratorAggregate</code>
     </MissingTemplateParam>
     <MixedArgument>
       <code>$index</code>
@@ -484,7 +484,7 @@
   </file>
   <file src="src/Iterator.php">
     <ImplementedReturnTypeMismatch>
-      <code><![CDATA[Generator<array, array-key|TEntity, mixed, void>]]></code>
+      <code><![CDATA[\Generator<array, array-key|TEntity, mixed, void>]]></code>
     </ImplementedReturnTypeMismatch>
     <InvalidReturnStatement>
       <code><![CDATA[$e ?? $this->entityFactory->make($role, $data, Node::MANAGED, typecast: $this->typecast)]]></code>
@@ -521,7 +521,7 @@
       <code><![CDATA[$e ?? $this->entityFactory->make($role, $data, Node::MANAGED, typecast: $this->typecast)]]></code>
     </MixedReturnStatement>
     <MixedReturnTypeCoercion>
-      <code><![CDATA[Generator<array, array-key|TEntity, mixed, void>]]></code>
+      <code><![CDATA[\Generator<array, array-key|TEntity, mixed, void>]]></code>
     </MixedReturnTypeCoercion>
   </file>
   <file src="src/Mapper/ClasslessMapper.php">
@@ -529,7 +529,7 @@
       <code><![CDATA[$this->role]]></code>
     </ArgumentTypeCoercion>
     <InvalidArgument>
-      <code><![CDATA[array_keys($this->columns + $this->parentColumns)]]></code>
+      <code><![CDATA[\array_keys($this->columns + $this->parentColumns)]]></code>
     </InvalidArgument>
     <MissingParamType>
       <code>$entity</code>
@@ -574,7 +574,7 @@
     </MixedAssignment>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$this->primaryColumns]]></code>
-      <code><![CDATA[(array)$schema->define($role, SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $schema->define($role, SchemaInterface::PRIMARY_KEY)]]></code>
     </MixedPropertyTypeCoercion>
   </file>
   <file src="src/Mapper/Mapper.php">
@@ -616,7 +616,7 @@
       <code>$currentData[$key]</code>
       <code>$field</code>
       <code>$relations</code>
-      <code><![CDATA[$result[$key[0] === "\0" ? substr($key, strrpos($key, "\0", 1) + 1) : $key]]]></code>
+      <code><![CDATA[$result[$key[0] === "\0" ? \substr($key, \strrpos($key, "\0", 1) + 1) : $key]]]></code>
       <code>$value</code>
       <code>$value</code>
     </MixedAssignment>
@@ -639,7 +639,7 @@
       <code>class-string</code>
     </MoreSpecificReturnType>
     <PossiblyFalseOperand>
-      <code><![CDATA[strrpos($key, "\0", 1)]]></code>
+      <code><![CDATA[\strrpos($key, "\0", 1)]]></code>
     </PossiblyFalseOperand>
     <UnusedForeachValue>
       <code>$relation</code>
@@ -673,10 +673,10 @@
       <code>$value</code>
     </MixedAssignment>
     <PossiblyNullFunctionCall>
-      <code>Closure::bind($setter, null, $class)($object, $props, $data)</code>
-      <code><![CDATA[Closure::bind(static function (object $object, array $props, array &$data): void {
+      <code>\Closure::bind($setter, null, $class)($object, $props, $data)</code>
+      <code><![CDATA[\Closure::bind(static function (object $object, array $props, array &$data): void {
                 foreach ($props as $property) {
-                    if (!array_key_exists($property, $data)) {
+                    if (!\array_key_exists($property, $data)) {
                         continue;
                     }
 
@@ -688,7 +688,7 @@
                         if ($e::class === \TypeError::class) {
                             throw new MapperException(
                                 "Can't hydrate an entity because property and value types are incompatible.",
-                                previous: $e
+                                previous: $e,
                             );
                         }
                     }
@@ -720,7 +720,7 @@
     </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement>
       <code><![CDATA[$this->classProperties[$entity::class] ??= $this->propertiesExtractor
-            ->extract($entity, array_keys($relMap->getRelations()))]]></code>
+            ->extract($entity, \array_keys($relMap->getRelations()))]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code>PropertyMap[]</code>
@@ -733,14 +733,14 @@
       <code>$key</code>
       <code>$properties</code>
       <code><![CDATA[$scope === '' ? $class : $scope]]></code>
-      <code><![CDATA[array_keys($relMap->getRelations())]]></code>
+      <code><![CDATA[\array_keys($relMap->getRelations())]]></code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code>$currentData</code>
       <code>$currentData[$key]</code>
       <code>$name</code>
       <code>$properties</code>
-      <code><![CDATA[$result[$key[0] === "\0" ? substr($key, strrpos($key, "\0", 1) + 1) : $key]]]></code>
+      <code><![CDATA[$result[$key[0] === "\0" ? \substr($key, \strrpos($key, "\0", 1) + 1) : $key]]]></code>
       <code>$value</code>
     </MixedAssignment>
     <MixedInferredReturnType>
@@ -751,18 +751,18 @@
       <code>$currentData</code>
     </MixedReturnStatement>
     <MixedReturnTypeCoercion>
+      <code><![CDATA[\array_diff_key($this->entityToArray($entity), $relMap->getRelations())]]></code>
       <code><![CDATA[array<string, mixed>]]></code>
-      <code><![CDATA[array_diff_key($this->entityToArray($entity), $relMap->getRelations())]]></code>
     </MixedReturnTypeCoercion>
     <PossiblyFalseArgument>
       <code>$pos</code>
     </PossiblyFalseArgument>
     <PossiblyFalseOperand>
       <code>$pos</code>
-      <code><![CDATA[strrpos($key, "\0", 1)]]></code>
+      <code><![CDATA[\strrpos($key, "\0", 1)]]></code>
     </PossiblyFalseOperand>
     <PossiblyNullFunctionCall>
-      <code><![CDATA[Closure::bind($this->initializer, null, $scope === '' ? $class : $scope)($proxy, $properties)]]></code>
+      <code><![CDATA[\Closure::bind($this->initializer, null, $scope === '' ? $class : $scope)($proxy, $properties)]]></code>
     </PossiblyNullFunctionCall>
     <PropertyTypeCoercion>
       <code><![CDATA[$this->classMap]]></code>
@@ -825,7 +825,7 @@
             MapperProviderInterface::class => $this->mapperProvider,
             RelationProviderInterface::class => $this->relationProvider,
             RepositoryProviderInterface::class => $this->repositoryProvider,
-            default => throw new InvalidArgumentException("Undefined service `$class`.")
+            default => throw new \InvalidArgumentException("Undefined service `$class`."),
         }]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
@@ -1028,7 +1028,7 @@
     <DocblockTypeContradiction>
       <code><![CDATA[$type === 'int']]></code>
       <code><![CDATA[$type === 'int' && (\is_int($value) || \preg_match('/^\\d++$/', $value) === 1)
-                            => $rule::tryFrom((int)$value)]]></code>
+                            => $rule::tryFrom((int) $value)]]></code>
       <code><![CDATA[$type === 'string']]></code>
       <code>null</code>
     </DocblockTypeContradiction>
@@ -1074,8 +1074,8 @@
       <code>bool</code>
     </MixedInferredReturnType>
     <MixedPropertyTypeCoercion>
-      <code>(array)$schema[Relation::INNER_KEY]</code>
-      <code>(array)$schema[Relation::OUTER_KEY]</code>
+      <code>(array) $schema[Relation::INNER_KEY]</code>
+      <code>(array) $schema[Relation::OUTER_KEY]</code>
     </MixedPropertyTypeCoercion>
     <MixedReturnStatement>
       <code><![CDATA[$this->schema[Relation::CASCADE] ?? false]]></code>
@@ -1130,7 +1130,7 @@
       <code>?object</code>
     </MixedInferredReturnType>
     <MixedPropertyTypeCoercion>
-      <code><![CDATA[(array)$orm->getSchema()->define($target, SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $orm->getSchema()->define($target, SchemaInterface::PRIMARY_KEY)]]></code>
     </MixedPropertyTypeCoercion>
     <MixedReturnStatement>
       <code><![CDATA[$reference->getValue()]]></code>
@@ -1194,7 +1194,7 @@
     <MixedReturnStatement>
       <code><![CDATA[$reference->getValue()]]></code>
       <code><![CDATA[$this->factory->collection(
-            $this->schema[Relation::COLLECTION_TYPE] ?? null
+            $this->schema[Relation::COLLECTION_TYPE] ?? null,
         )->collect($data)]]></code>
     </MixedReturnStatement>
     <PossiblyNullArgument>
@@ -1244,7 +1244,7 @@
                 $this->schema[Relation::THROUGH_ENTITY],
                 $pivot,
                 Node::MANAGED,
-                typecast: true
+                typecast: true,
             )]]></code>
     </InvalidArgument>
     <InvalidReturnStatement>
@@ -1278,10 +1278,10 @@
       <code>$pivot</code>
       <code>$pivot</code>
       <code>$pivot ?? []</code>
-      <code>(array)$data</code>
-      <code><![CDATA[(array)$this->schema[Relation::INNER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::INNER_KEY]]]></code>
-      <code>iterator_to_array($data)</code>
+      <code>(array) $data</code>
+      <code><![CDATA[(array) $this->schema[Relation::INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::INNER_KEY]]]></code>
+      <code>\iterator_to_array($data)</code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
       <code>$d[LoaderInterface::ROLE_KEY]</code>
@@ -1334,13 +1334,13 @@
       <code>get</code>
     </MixedMethodCall>
     <MixedPropertyTypeCoercion>
-      <code><![CDATA[(array)$this->schema[Relation::THROUGH_INNER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::THROUGH_OUTER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::THROUGH_INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::THROUGH_OUTER_KEY]]]></code>
     </MixedPropertyTypeCoercion>
     <MixedReturnStatement>
       <code><![CDATA[$reference->getValue()]]></code>
       <code><![CDATA[$this->factory->collection(
-            $this->schema[Relation::COLLECTION_TYPE] ?? null
+            $this->schema[Relation::COLLECTION_TYPE] ?? null,
         )->collect($data)]]></code>
     </MixedReturnStatement>
     <PossiblyInvalidArgument>
@@ -1356,7 +1356,7 @@
       <code><![CDATA[$pTuple->state]]></code>
     </PossiblyNullPropertyFetch>
     <RedundantCast>
-      <code>(array)$data</code>
+      <code>(array) $data</code>
     </RedundantCast>
     <RiskyTruthyFalsyComparison>
       <code>!$data</code>
@@ -1484,8 +1484,8 @@
       <code>$name</code>
       <code>$name</code>
       <code>$outerRole</code>
-      <code>(array)$relationSchema[Relation::SCHEMA][Relation::OUTER_KEY]</code>
-      <code>(array)$relationSchema[Relation::SCHEMA][Relation::THROUGH_OUTER_KEY]</code>
+      <code>(array) $relationSchema[Relation::SCHEMA][Relation::OUTER_KEY]</code>
+      <code>(array) $relationSchema[Relation::SCHEMA][Relation::THROUGH_OUTER_KEY]</code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
       <code>$relationSchema[Relation::SCHEMA][Relation::OUTER_KEY]</code>
@@ -1797,7 +1797,7 @@
       <code><![CDATA[Iterator<TEntity>]]></code>
     </InvalidTemplateParam>
     <MissingTemplateParam>
-      <code>IteratorAggregate</code>
+      <code>\IteratorAggregate</code>
     </MissingTemplateParam>
     <MixedArgument>
       <code>$data[0]</code>
@@ -1829,7 +1829,7 @@
     <MixedReturnStatement>
       <code><![CDATA[\count($ids) > 1
             ? $this->__call('where', [$pk, new Parameter($ids)])
-            : $this->__call('where', [$pk, current($ids)])]]></code>
+            : $this->__call('where', [$pk, \current($ids)])]]></code>
     </MixedReturnStatement>
     <MixedReturnTypeCoercion>
       <code><![CDATA[$node->getResult()]]></code>
@@ -1840,7 +1840,7 @@
             $this->loader->getTarget(),
             $node->getResult(),
             $findInHeap,
-            typecast: true
+            typecast: true,
         )]]></code>
       <code><![CDATA[Iterator<TEntity>]]></code>
       <code><![CDATA[\array_map([$mapper, 'cast'], $node->getResult())]]></code>
@@ -1959,9 +1959,9 @@
     </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::INNER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::OUTER_KEY]]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::OUTER_KEY]]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Select/Loader/EmbeddedLoader.php">
@@ -1971,7 +1971,7 @@
     </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->ormSchema->define($this->parent->getTarget(), SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->ormSchema->define($this->parent->getTarget(), SchemaInterface::PRIMARY_KEY)]]></code>
     </MixedArgumentTypeCoercion>
     <MixedInferredReturnType>
       <code>bool</code>
@@ -1996,9 +1996,9 @@
     </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::INNER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::OUTER_KEY]]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::OUTER_KEY]]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Select/Loader/HasOneLoader.php">
@@ -2007,9 +2007,9 @@
     </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::INNER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::OUTER_KEY]]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::OUTER_KEY]]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Select/Loader/ManyToManyLoader.php">
@@ -2037,9 +2037,9 @@
     <MixedArgumentTypeCoercion>
       <code>$relation</code>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::OUTER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::THROUGH_OUTER_KEY]]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::OUTER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::THROUGH_OUTER_KEY]]]></code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code>$key</code>
@@ -2086,9 +2086,9 @@
   <file src="src/Select/Loader/ParentLoader.php">
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::INNER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::OUTER_KEY]]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::OUTER_KEY]]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Select/Loader/PivotLoader.php">
@@ -2097,9 +2097,9 @@
     </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::INNER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::THROUGH_INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::THROUGH_INNER_KEY]]]></code>
     </MixedArgumentTypeCoercion>
     <MixedInferredReturnType>
       <code>string</code>
@@ -2137,9 +2137,9 @@
   <file src="src/Select/Loader/SubclassLoader.php">
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::INNER_KEY]]]></code>
-      <code><![CDATA[(array)$this->schema[Relation::OUTER_KEY]]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::INNER_KEY]]]></code>
+      <code><![CDATA[(array) $this->schema[Relation::OUTER_KEY]]]></code>
     </MixedArgumentTypeCoercion>
   </file>
   <file src="src/Select/QueryBuilder.php">
@@ -2170,7 +2170,7 @@
       <code>getParentLoader</code>
     </PossiblyUndefinedMethod>
     <RiskyTruthyFalsyComparison>
-      <code><![CDATA[strpos($name, '(')]]></code>
+      <code><![CDATA[\strpos($name, '(')]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/Select/Repository.php">
@@ -2188,7 +2188,7 @@
             }]]></code>
     </ImpureMethodCall>
     <LessSpecificReturnStatement>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
     </LessSpecificReturnStatement>
     <MixedArgument>
       <code>$key</code>
@@ -2200,7 +2200,7 @@
     <MixedArgumentTypeCoercion>
       <code>$relation</code>
       <code><![CDATA[$this->columnNames()]]></code>
-      <code><![CDATA[(array)$this->define(SchemaInterface::PRIMARY_KEY)]]></code>
+      <code><![CDATA[(array) $this->define(SchemaInterface::PRIMARY_KEY)]]></code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code>$key</code>

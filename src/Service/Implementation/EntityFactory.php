@@ -26,14 +26,13 @@ final class EntityFactory implements EntityFactoryInterface
         private MapperProviderInterface $mapperProvider,
         private RelationProviderInterface $relationProvider,
         private IndexProviderInterface $indexProvider,
-    ) {
-    }
+    ) {}
 
     public function make(
         string $role,
         array $data = [],
         int $status = Node::NEW,
-        bool $typecast = false
+        bool $typecast = false,
     ): object {
         $role = $data[LoaderInterface::ROLE_KEY] ?? $role;
         unset($data[LoaderInterface::ROLE_KEY]);
@@ -91,7 +90,7 @@ final class EntityFactory implements EntityFactoryInterface
 
             $class = $entity::class;
             if (!$this->schema->defines($class)) {
-                $parentClass = get_parent_class($entity);
+                $parentClass = \get_parent_class($entity);
 
                 if ($parentClass === false
                     || !$entity instanceof EntityProxyInterface

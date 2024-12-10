@@ -82,7 +82,7 @@ class BelongsTo extends AbstractRelation implements DependencyInterface
         }
         if ($related instanceof ReferenceInterface) {
             $scope = $related->getScope();
-            if (array_intersect($this->outerKeys, array_keys($scope))) {
+            if (\array_intersect($this->outerKeys, \array_keys($scope))) {
                 foreach ($this->outerKeys as $i => $outerKey) {
                     $state->register($this->innerKeys[$i], $scope[$outerKey]);
                 }
@@ -125,7 +125,7 @@ class BelongsTo extends AbstractRelation implements DependencyInterface
         $toReference = [];
         foreach ($this->outerKeys as $i => $outerKey) {
             $innerKey = $this->innerKeys[$i];
-            if (!array_key_exists($innerKey, $oldData) || $oldData[$innerKey] !== $newData[$outerKey]) {
+            if (!\array_key_exists($innerKey, $oldData) || $oldData[$innerKey] !== $newData[$outerKey]) {
                 return true;
             }
             $toReference[$outerKey] = $current[$innerKey];
@@ -140,7 +140,7 @@ class BelongsTo extends AbstractRelation implements DependencyInterface
         if ($this->isNullable()) {
             $isNull = true;
             foreach ($this->innerKeys as $innerKey) {
-                if (!array_key_exists($innerKey, $current) || $current[$innerKey] !== null) {
+                if (!\array_key_exists($innerKey, $current) || $current[$innerKey] !== null) {
                     $isNull = false;
                     break;
                 }
@@ -215,7 +215,7 @@ class BelongsTo extends AbstractRelation implements DependencyInterface
                 }
                 $tuple->state->setRelationStatus($this->getName(), RelationInterface::STATUS_PROCESS);
             } elseif (!$this->checkNullValuePossibility($tuple)) {
-                throw new NullException(sprintf('Relation `%s`.%s can not be null.', $node->getRole(), (string)$this));
+                throw new NullException(\sprintf('Relation `%s`.%s can not be null.', $node->getRole(), (string) $this));
             }
             return;
         }

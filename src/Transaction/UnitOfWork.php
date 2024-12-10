@@ -22,7 +22,6 @@ final class UnitOfWork implements StateInterface
     private const RELATIONS_NOT_RESOLVED = 0;
     private const RELATIONS_RESOLVED = 1;
     private const RELATIONS_DEFERRED = 2;
-
     private const STAGE_PREPARING = 0;
     private const STAGE_PROCESS = 1;
     private const STAGE_FINISHED = 2;
@@ -34,7 +33,7 @@ final class UnitOfWork implements StateInterface
 
     public function __construct(
         private ORMInterface $orm,
-        private ?RunnerInterface $runner = null
+        private ?RunnerInterface $runner = null,
     ) {
         $this->pool = new Pool($orm);
         $this->commandGenerator = $orm->getCommandGenerator();
@@ -83,7 +82,7 @@ final class UnitOfWork implements StateInterface
     {
         $this->stage = match ($this->stage) {
             self::STAGE_FINISHED => throw new SuccessTransactionRetryException(
-                'A successful transaction cannot be re-run.'
+                'A successful transaction cannot be re-run.',
             ),
             self::STAGE_PROCESS => throw new TransactionException('Can\'t run started transaction.'),
             default => self::STAGE_PROCESS,
@@ -177,7 +176,7 @@ final class UnitOfWork implements StateInterface
                 $syncData = \array_udiff_assoc(
                     $tuple->state->getData(),
                     $tuple->persist->getData(),
-                    [Node::class, 'compare']
+                    [Node::class, 'compare'],
                 );
             } else {
                 $syncData = $node->syncState($relationProvider->getRelationMap($role), $tuple->state);
@@ -344,7 +343,7 @@ final class UnitOfWork implements StateInterface
             $relation->queue(
                 $this->pool,
                 $tuple,
-                $command instanceof Sequence ? $command->getPrimaryCommand() : $command
+                $command instanceof Sequence ? $command->getPrimaryCommand() : $command,
             );
         }
         $this->runCommand($command);
@@ -361,8 +360,8 @@ final class UnitOfWork implements StateInterface
         $result = $tuple->task === Tuple::TASK_STORE
             ? $this->resolveMasterRelations($tuple, $map)
             : $this->resolveSlaveRelations($tuple, $map);
-        $isDependenciesResolved = (bool)($result & self::RELATIONS_RESOLVED);
-        $deferred = (bool)($result & self::RELATIONS_DEFERRED);
+        $isDependenciesResolved = (bool) ($result & self::RELATIONS_RESOLVED);
+        $deferred = (bool) ($result & self::RELATIONS_DEFERRED);
 
         // Self
         if ($deferred && $tuple->status < Tuple::STATUS_PROPOSED) {

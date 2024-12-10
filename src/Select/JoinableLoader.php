@@ -64,7 +64,7 @@ abstract class JoinableLoader extends AbstractLoader implements JoinableInterfac
         FactoryInterface $factory,
         protected string $name,
         string $target,
-        protected array $schema
+        protected array $schema,
     ) {
         parent::__construct($ormSchema, $sourceProvider, $factory, $target);
         $this->columns = $this->normalizeColumns($this->define(SchemaInterface::COLUMNS));
@@ -173,7 +173,7 @@ abstract class JoinableLoader extends AbstractLoader implements JoinableInterfac
             return true;
         }
 
-        return in_array($this->getMethod(), [self::INLOAD, self::JOIN, self::LEFT_JOIN], true);
+        return \in_array($this->getMethod(), [self::INLOAD, self::JOIN, self::LEFT_JOIN], true);
     }
 
     /**
@@ -189,17 +189,7 @@ abstract class JoinableLoader extends AbstractLoader implements JoinableInterfac
      */
     public function isLoaded(): bool
     {
-        return $this->options['load'] || in_array($this->getMethod(), [self::INLOAD, self::POSTLOAD], true);
-    }
-
-    protected function configureSubQuery(SelectQuery $query): SelectQuery
-    {
-        if (!$this->isJoined()) {
-            return $this->configureQuery($query);
-        }
-
-        $loader = new SubQueryLoader($this->ormSchema, $this->sourceProvider, $this->factory, $this, $this->options);
-        return $loader->configureQuery($query);
+        return $this->options['load'] || \in_array($this->getMethod(), [self::INLOAD, self::POSTLOAD], true);
     }
 
     /**
@@ -228,6 +218,16 @@ abstract class JoinableLoader extends AbstractLoader implements JoinableInterfac
         }
 
         return parent::configureQuery($query);
+    }
+
+    protected function configureSubQuery(SelectQuery $query): SelectQuery
+    {
+        if (!$this->isJoined()) {
+            return $this->configureQuery($query);
+        }
+
+        $loader = new SubQueryLoader($this->ormSchema, $this->sourceProvider, $this->factory, $this, $this->options);
+        return $loader->configureQuery($query);
     }
 
     protected function applyScope(SelectQuery $query): SelectQuery

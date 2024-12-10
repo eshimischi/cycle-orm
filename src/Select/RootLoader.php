@@ -29,7 +29,6 @@ final class RootLoader extends AbstractLoader
     use ColumnsTrait;
     use ScopeTrait;
 
-    /** @var array */
     protected array $options = [
         'load' => true,
         'scope' => true,
@@ -49,7 +48,7 @@ final class RootLoader extends AbstractLoader
     ) {
         parent::__construct($ormSchema, $sourceProvider, $factory, $target);
         $this->query = $this->source->getDatabase()->select()->from(
-            sprintf('%s AS %s', $this->source->getTable(), $this->getAlias())
+            \sprintf('%s AS %s', $this->source->getTable(), $this->getAlias()),
         );
         $this->columns = $this->normalizeColumns($this->define(SchemaInterface::COLUMNS));
 
@@ -58,15 +57,6 @@ final class RootLoader extends AbstractLoader
                 $this->loadRelation($relation, [], false, true);
             }
         }
-    }
-
-    /**
-     * Clone the underlying query.
-     */
-    public function __clone()
-    {
-        $this->query = clone $this->query;
-        parent::__clone();
     }
 
     public function getAlias(): string
@@ -100,7 +90,7 @@ final class RootLoader extends AbstractLoader
      */
     public function getPrimaryFields(): array
     {
-        return (array)$this->define(SchemaInterface::PRIMARY_KEY);
+        return (array) $this->define(SchemaInterface::PRIMARY_KEY);
     }
 
     /**
@@ -143,15 +133,24 @@ final class RootLoader extends AbstractLoader
         return true;
     }
 
+    /**
+     * Clone the underlying query.
+     */
+    public function __clone()
+    {
+        $this->query = clone $this->query;
+        parent::__clone();
+    }
+
     protected function configureQuery(SelectQuery $query): SelectQuery
     {
         return parent::configureQuery(
-            $this->mountColumns($query, true, '', true)
+            $this->mountColumns($query, true, '', true),
         );
     }
 
     protected function initNode(): RootNode
     {
-        return new RootNode($this->columnNames(), (array)$this->define(SchemaInterface::PRIMARY_KEY));
+        return new RootNode($this->columnNames(), (array) $this->define(SchemaInterface::PRIMARY_KEY));
     }
 }

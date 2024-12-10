@@ -80,7 +80,7 @@ interface ORMInterface extends
     public function with(
         ?SchemaInterface $schema = null,
         ?FactoryInterface $factory = null,
-        ?HeapInterface $heap = null
+        ?HeapInterface $heap = null,
     ): self;
 
     /**
