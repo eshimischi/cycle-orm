@@ -46,7 +46,7 @@
     },
     "require-dev": {
         "doctrine/collections": "^1.6 || ^2.0",
-        "illuminate/collections": "^8.0",
+        "illuminate/collections": "9 - 11",
         "loophp/collection": "^6.0 || ^7.0",
         "mockery/mockery": "^1.1",
         "phpunit/phpunit": "^9.5",
