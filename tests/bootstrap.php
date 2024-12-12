@@ -13,7 +13,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $drivers = [
     'sqlite' => new Config\SQLiteDriverConfig(
         queryCache: true,
-        options:[
+        options: [
             'logQueryParameters' => true,
         ],
     ),
@@ -24,7 +24,7 @@ $drivers = [
             port: 13306,
             charset: 'utf8mb4',
             user: 'root',
-            password: 'root',
+            password: 'YourStrong!Passw0rd',
         ),
         queryCache: true,
         options: [
@@ -37,7 +37,7 @@ $drivers = [
             host: '127.0.0.1',
             port: 15432,
             user: 'postgres',
-            password: 'postgres',
+            password: 'YourStrong!Passw0rd',
         ),
         schema: 'public',
         queryCache: true,
@@ -49,7 +49,7 @@ $drivers = [
         connection: new Config\SQLServer\DsnConnectionConfig(
             'sqlsrv:Server=127.0.0.1,11433;Database=tempdb;TrustServerCertificate=true',
             user: 'SA',
-            password: 'SSpaSS__1'
+            password: 'YourStrong!Passw0rd',
         ),
         queryCache: true,
         options: [
@@ -66,5 +66,5 @@ $db = getenv('DB') ?: null;
 ] + (
     $db === null
         ? $drivers
-        : array_intersect_key($drivers, array_flip((array)$db))
+        : array_intersect_key($drivers, array_flip((array) $db))
 );

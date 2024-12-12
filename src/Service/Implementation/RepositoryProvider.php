@@ -25,9 +25,8 @@ final class RepositoryProvider implements RepositoryProviderInterface
         private ?ORMInterface $orm,
         private SourceProviderInterface $sourceProvider,
         private SchemaInterface $schema,
-        private FactoryInterface $factory
-    ) {
-    }
+        private FactoryInterface $factory,
+    ) {}
 
     public function getRepository(string $entity): RepositoryInterface
     {

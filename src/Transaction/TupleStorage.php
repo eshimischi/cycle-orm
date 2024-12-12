@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Cycle\ORM\Transaction;
 
-use Countable;
 use IteratorAggregate;
 
 /**
@@ -12,7 +11,7 @@ use IteratorAggregate;
  *
  * @implements IteratorAggregate<object, Tuple>
  */
-final class TupleStorage implements IteratorAggregate, Countable
+final class TupleStorage implements \IteratorAggregate, \Countable
 {
     /** @var array<int, Tuple> */
     private array $storage = [];
@@ -26,7 +25,7 @@ final class TupleStorage implements IteratorAggregate, Countable
     {
         $iterator = $this->storage;
         // When the generator is destroyed, the reference to the iterator is removed from the collection.
-        $cleaner = new class () {
+        $cleaner = new class {
             public array $iterators;
 
             public function __destruct()

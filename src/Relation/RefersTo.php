@@ -66,7 +66,7 @@ class RefersTo extends AbstractRelation implements DependencyInterface
         }
         if ($related instanceof ReferenceInterface) {
             $scope = $related->getScope();
-            if (array_intersect($this->outerKeys, array_keys($scope))) {
+            if (\array_intersect($this->outerKeys, \array_keys($scope))) {
                 foreach ($this->outerKeys as $i => $outerKey) {
                     $tuple->state->register($this->innerKeys[$i], $scope[$outerKey]);
                 }

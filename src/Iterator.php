@@ -8,7 +8,6 @@ use Cycle\ORM\Heap\HeapInterface;
 use Cycle\ORM\Heap\Node;
 use Cycle\ORM\Service\EntityFactoryInterface;
 use Cycle\ORM\Select\LoaderInterface;
-use Generator;
 use IteratorAggregate;
 
 /**
@@ -18,7 +17,7 @@ use IteratorAggregate;
  *
  * @template-implements IteratorAggregate<array-key|array, TEntity>
  */
-final class Iterator implements IteratorAggregate
+final class Iterator implements \IteratorAggregate
 {
     private function __construct(
         private string $role,
@@ -27,9 +26,8 @@ final class Iterator implements IteratorAggregate
         private EntityFactoryInterface $entityFactory,
         private iterable $source,
         private bool $findInHeap = false,
-        private bool $typecast = false
-    ) {
-    }
+        private bool $typecast = false,
+    ) {}
 
     /**
      * @param class-string<TEntity>|string $class
@@ -40,7 +38,7 @@ final class Iterator implements IteratorAggregate
         string $class,
         iterable $source,
         bool $findInHeap = false,
-        bool $typecast = false
+        bool $typecast = false,
     ): self {
         return new self(
             $orm->resolveRole($class),
@@ -49,7 +47,7 @@ final class Iterator implements IteratorAggregate
             $orm->getService(EntityFactoryInterface::class),
             $source,
             $findInHeap,
-            $typecast
+            $typecast,
         );
     }
 
@@ -64,7 +62,7 @@ final class Iterator implements IteratorAggregate
         string $role,
         iterable $source,
         bool $findInHeap = false,
-        bool $typecast = false
+        bool $typecast = false,
     ): self {
         return new self(
             $role,
@@ -73,7 +71,7 @@ final class Iterator implements IteratorAggregate
             $entityProvider,
             $source,
             $findInHeap,
-            $typecast
+            $typecast,
         );
     }
 
@@ -81,9 +79,9 @@ final class Iterator implements IteratorAggregate
      * Generate entities using incoming data stream. Pivoted data would be
      * returned as key value if set.
      *
-     * @return Generator<array, array-key|TEntity, mixed, void>
+     * @return \Generator<array, array-key|TEntity, mixed, void>
      */
-    public function getIterator(): Generator
+    public function getIterator(): \Generator
     {
         foreach ($this->source as $index => $data) {
             // through-like relations

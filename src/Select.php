@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Cycle\ORM;
 
-use Countable;
 use Cycle\Database\Injection\Parameter;
 use Cycle\Database\Query\SelectQuery;
 use Cycle\ORM\Heap\Node;
@@ -15,8 +14,6 @@ use Cycle\ORM\Select\JoinableLoader;
 use Cycle\ORM\Select\QueryBuilder;
 use Cycle\ORM\Select\RootLoader;
 use Cycle\ORM\Select\ScopeInterface;
-use InvalidArgumentException;
-use IteratorAggregate;
 use Spiral\Pagination\PaginableInterface;
 
 /**
@@ -52,7 +49,7 @@ use Spiral\Pagination\PaginableInterface;
  *
  * @template-covariant TEntity of object
  */
-class Select implements IteratorAggregate, Countable, PaginableInterface
+class Select implements \IteratorAggregate, \Countable, PaginableInterface
 {
     // load relation data within same query
     public const SINGLE_QUERY = JoinableLoader::INLOAD;
@@ -61,7 +58,6 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
     public const OUTER_QUERY = JoinableLoader::POSTLOAD;
 
     private RootLoader $loader;
-
     private QueryBuilder $builder;
     private MapperProviderInterface $mapperProvider;
     private Heap\HeapInterface $heap;
@@ -73,7 +69,7 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
      */
     public function __construct(
         ORMInterface $orm,
-        string $role
+        string $role,
     ) {
         $this->heap = $orm->getHeap();
         $this->schema = $orm->getSchema();
@@ -83,47 +79,8 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
             $orm->getSchema(),
             $orm->getService(SourceProviderInterface::class),
             $orm->getFactory(),
-            $orm->resolveRole($role)
+            $orm->resolveRole($role),
         );
-        $this->builder = new QueryBuilder($this->loader->getQuery(), $this->loader);
-    }
-
-    /**
-     * Remove nested loaders and clean ORM link.
-     */
-    public function __destruct()
-    {
-        unset($this->loader, $this->builder);
-    }
-
-    /**
-     * Bypassing call to primary select query.
-     */
-    public function __call(string $name, array $arguments): mixed
-    {
-        if (in_array(strtoupper($name), ['AVG', 'MIN', 'MAX', 'SUM', 'COUNT'])) {
-            // aggregations
-            return $this->builder->withQuery(
-                $this->loader->buildQuery()
-            )->__call($name, $arguments);
-        }
-
-        $result = $this->builder->__call($name, $arguments);
-        if ($result instanceof QueryBuilder) {
-            return $this;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Cloning with loader tree cloning.
-     *
-     * @attention at this moment binded query parameters would't be cloned!
-     */
-    public function __clone()
-    {
-        $this->loader = clone $this->loader;
         $this->builder = new QueryBuilder($this->loader->getQuery(), $this->loader);
     }
 
@@ -132,7 +89,7 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
      *
      * @return static<TEntity>
      */
-    public function scope(ScopeInterface $scope = null): self
+    public function scope(?ScopeInterface $scope = null): self
     {
         $this->loader->setScope($scope);
 
@@ -173,7 +130,7 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
 
         return \count($ids) > 1
             ? $this->__call('where', [$pk, new Parameter($ids)])
-            : $this->__call('where', [$pk, current($ids)]);
+            : $this->__call('where', [$pk, \current($ids)]);
     }
 
     /**
@@ -181,7 +138,7 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
      *
      * @param string|null $column When column is null DISTINCT(PK) will be generated.
      */
-    public function count(string $column = null): int
+    public function count(?string $column = null): int
     {
         if ($column === null) {
             // @tuneyourserver solves the issue with counting on queries with joins.
@@ -409,7 +366,7 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
      *
      * @return TEntity|null
      */
-    public function fetchOne(array $query = null): ?object
+    public function fetchOne(?array $query = null): ?object
     {
         $select = (clone $this)->where($query)->limit(1);
         $node = $select->loader->createNode();
@@ -449,7 +406,7 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
             $this->loader->getTarget(),
             $node->getResult(),
             $findInHeap,
-            typecast: true
+            typecast: true,
         );
     }
 
@@ -487,6 +444,45 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
     }
 
     /**
+     * Bypassing call to primary select query.
+     */
+    public function __call(string $name, array $arguments): mixed
+    {
+        if (\in_array(\strtoupper($name), ['AVG', 'MIN', 'MAX', 'SUM', 'COUNT'])) {
+            // aggregations
+            return $this->builder->withQuery(
+                $this->loader->buildQuery(),
+            )->__call($name, $arguments);
+        }
+
+        $result = $this->builder->__call($name, $arguments);
+        if ($result instanceof QueryBuilder) {
+            return $this;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Cloning with loader tree cloning.
+     *
+     * @attention at this moment binded query parameters would't be cloned!
+     */
+    public function __clone()
+    {
+        $this->loader = clone $this->loader;
+        $this->builder = new QueryBuilder($this->loader->getQuery(), $this->loader);
+    }
+
+    /**
+     * Remove nested loaders and clean ORM link.
+     */
+    public function __destruct()
+    {
+        unset($this->loader, $this->builder);
+    }
+
+    /**
      * @param list<non-empty-string> $pk
      * @param list<array|int|object|string> $args
      *
@@ -498,18 +494,18 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
         foreach ($args as $index => $values) {
             $values = $values instanceof Parameter ? $values->getValue() : $values;
             if (!\is_array($values)) {
-                throw new InvalidArgumentException('Composite primary key must be defined using an array.');
+                throw new \InvalidArgumentException('Composite primary key must be defined using an array.');
             }
             if (\count($pk) !== \count($values)) {
-                throw new InvalidArgumentException(
-                    \sprintf('Primary key should contain %d values.', \count($pk))
+                throw new \InvalidArgumentException(
+                    \sprintf('Primary key should contain %d values.', \count($pk)),
                 );
             }
 
             $isAssoc = !\array_is_list($values);
             foreach ($values as $key => $value) {
                 if ($isAssoc && !\in_array($key, $pk, true)) {
-                    throw new InvalidArgumentException(\sprintf('Primary key `%s` not found.', $key));
+                    throw new \InvalidArgumentException(\sprintf('Primary key `%s` not found.', $key));
                 }
 
                 $key = $isAssoc ? $key : $pk[$key];
@@ -517,7 +513,7 @@ class Select implements IteratorAggregate, Countable, PaginableInterface
             }
         }
 
-        $this->__call('where', [static function (Select\QueryBuilder $q) use ($prepared) {
+        $this->__call('where', [static function (Select\QueryBuilder $q) use ($prepared): void {
             foreach ($prepared as $set) {
                 $q->orWhere($set);
             }

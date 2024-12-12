@@ -46,7 +46,7 @@ trait ColumnsTrait
         SelectQuery $query,
         bool $minify = false,
         string $prefix = '',
-        bool $overwrite = false
+        bool $overwrite = false,
     ): SelectQuery {
         $alias = $this->getAlias();
         $columns = $overwrite ? [] : $query->getColumns();

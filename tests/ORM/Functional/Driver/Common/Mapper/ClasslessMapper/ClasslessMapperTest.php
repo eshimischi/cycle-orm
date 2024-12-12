@@ -17,45 +17,6 @@ abstract class ClasslessMapperTest extends BaseMapperTest
 {
     use TableTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->makeTable(
-            'user',
-            [
-                'id' => 'primary',
-                'email' => 'string',
-                'balance' => 'float,nullable',
-            ]
-        );
-
-        $this->getDatabase()->table('user')->insertMultiple(
-            ['email', 'balance'],
-            [
-                ['hello@world.com', 100],
-                ['another@world.com', 200],
-            ]
-        );
-
-        $this->orm = $this->withSchema(
-            new Schema(
-                [
-                    'user' => [
-                        Schema::MAPPER => ClasslessMapper::class,
-                        Schema::DATABASE => 'default',
-                        Schema::TABLE => 'user',
-                        Schema::PRIMARY_KEY => 'id',
-                        Schema::COLUMNS => ['id', 'email', 'balance'],
-                        Schema::TYPECAST => ['balance' => 'float'],
-                        Schema::SCHEMA => [],
-                        Schema::RELATIONS => [],
-                    ],
-                ]
-            )
-        );
-    }
-
     public function testFetchData(): void
     {
         $this->assertEquals(
@@ -71,7 +32,7 @@ abstract class ClasslessMapperTest extends BaseMapperTest
                     'balance' => 200.0,
                 ],
             ],
-            (new Select($this->orm, 'user'))->fetchData()
+            (new Select($this->orm, 'user'))->fetchData(),
         );
     }
 
@@ -201,7 +162,7 @@ abstract class ClasslessMapperTest extends BaseMapperTest
                 'email' => 'hello@world.com',
                 'balance' => 100.0,
             ],
-            $this->orm->getHeap()->get($result)->getData()
+            $this->orm->getHeap()->get($result)->getData(),
         );
     }
 
@@ -344,5 +305,44 @@ abstract class ClasslessMapperTest extends BaseMapperTest
         $this->orm = $this->orm->withHeap(new Heap());
         $u = $this->orm->getRepository('user')->findByPK(1);
         $this->assertNull($u->balance);
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->makeTable(
+            'user',
+            [
+                'id' => 'primary',
+                'email' => 'string',
+                'balance' => 'float,nullable',
+            ],
+        );
+
+        $this->getDatabase()->table('user')->insertMultiple(
+            ['email', 'balance'],
+            [
+                ['hello@world.com', 100],
+                ['another@world.com', 200],
+            ],
+        );
+
+        $this->orm = $this->withSchema(
+            new Schema(
+                [
+                    'user' => [
+                        Schema::MAPPER => ClasslessMapper::class,
+                        Schema::DATABASE => 'default',
+                        Schema::TABLE => 'user',
+                        Schema::PRIMARY_KEY => 'id',
+                        Schema::COLUMNS => ['id', 'email', 'balance'],
+                        Schema::TYPECAST => ['balance' => 'float'],
+                        Schema::SCHEMA => [],
+                        Schema::RELATIONS => [],
+                    ],
+                ],
+            ),
+        );
     }
 }

@@ -21,61 +21,6 @@ abstract class EmbeddedRelationTest extends BaseTest
 {
     use TableTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->makeTable('user', [
-            'id' => 'primary',
-            'email' => 'string',
-            'balance' => 'float',
-            'creds_username' => 'string',
-            'creds_password' => 'string',
-        ]);
-
-        $this->getDatabase()->table('user')->insertMultiple(
-            ['email', 'balance', 'creds_username', 'creds_password'],
-            [
-                ['hello@world.com', 100, 'user1', 'pass1'],
-                ['another@world.com', 200, 'user2', 'pass2'],
-            ]
-        );
-
-        $this->orm = $this->withSchema(new Schema([
-            User::class => [
-                Schema::ROLE => 'user',
-                Schema::MAPPER => Mapper::class,
-                Schema::DATABASE => 'default',
-                Schema::TABLE => 'user',
-                Schema::PRIMARY_KEY => 'id',
-                Schema::COLUMNS => ['id', 'email', 'balance'],
-                Schema::SCHEMA => [],
-                Schema::RELATIONS => [
-                    'credentials' => [
-                        Relation::TYPE => Relation::EMBEDDED,
-                        Relation::TARGET => 'user:credentials',
-                        Relation::LOAD => Relation::LOAD_PROMISE,
-                        Relation::SCHEMA => [],
-                    ],
-                ],
-            ],
-            UserCredentials::class => [
-                Schema::ROLE => 'user:credentials',
-                Schema::MAPPER => Mapper::class,
-                Schema::DATABASE => 'default',
-                Schema::TABLE => 'user',
-                Schema::PRIMARY_KEY => 'id',
-                Schema::COLUMNS => [
-                    'id' => 'id',
-                    'username' => 'creds_username',
-                    'password' => 'creds_password',
-                ],
-                Schema::SCHEMA => [],
-                Schema::RELATIONS => [],
-            ],
-        ]));
-    }
-
     public function testFetchData(): void
     {
         $selector = new Select($this->orm, User::class);
@@ -138,7 +83,7 @@ abstract class EmbeddedRelationTest extends BaseTest
         $this->save($u);
         $this->assertNumWrites(1);
 
-        $this->assertSame(3, (int)$u->id);
+        $this->assertSame(3, (int) $u->id);
 
         $selector = new Select($this->orm->withHeap(new Heap()), User::class);
         $u2 = $selector->load('credentials')->wherePK($u->id)->fetchOne();
@@ -174,7 +119,7 @@ abstract class EmbeddedRelationTest extends BaseTest
             ],
             [
                 'id' => $u->id,
-            ]
+            ],
         )->run();
 
         $this->captureWriteQueries();
@@ -429,5 +374,60 @@ abstract class EmbeddedRelationTest extends BaseTest
 
         $this->assertEquals($u->id, $u2->id);
         $this->assertSame('user3', $u2->credentials->username);
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->makeTable('user', [
+            'id' => 'primary',
+            'email' => 'string',
+            'balance' => 'float',
+            'creds_username' => 'string',
+            'creds_password' => 'string',
+        ]);
+
+        $this->getDatabase()->table('user')->insertMultiple(
+            ['email', 'balance', 'creds_username', 'creds_password'],
+            [
+                ['hello@world.com', 100, 'user1', 'pass1'],
+                ['another@world.com', 200, 'user2', 'pass2'],
+            ],
+        );
+
+        $this->orm = $this->withSchema(new Schema([
+            User::class => [
+                Schema::ROLE => 'user',
+                Schema::MAPPER => Mapper::class,
+                Schema::DATABASE => 'default',
+                Schema::TABLE => 'user',
+                Schema::PRIMARY_KEY => 'id',
+                Schema::COLUMNS => ['id', 'email', 'balance'],
+                Schema::SCHEMA => [],
+                Schema::RELATIONS => [
+                    'credentials' => [
+                        Relation::TYPE => Relation::EMBEDDED,
+                        Relation::TARGET => 'user:credentials',
+                        Relation::LOAD => Relation::LOAD_PROMISE,
+                        Relation::SCHEMA => [],
+                    ],
+                ],
+            ],
+            UserCredentials::class => [
+                Schema::ROLE => 'user:credentials',
+                Schema::MAPPER => Mapper::class,
+                Schema::DATABASE => 'default',
+                Schema::TABLE => 'user',
+                Schema::PRIMARY_KEY => 'id',
+                Schema::COLUMNS => [
+                    'id' => 'id',
+                    'username' => 'creds_username',
+                    'password' => 'creds_password',
+                ],
+                Schema::SCHEMA => [],
+                Schema::RELATIONS => [],
+            ],
+        ]));
     }
 }

@@ -84,43 +84,17 @@ abstract class AbstractLoader implements LoaderInterface
      * @var array<string, array>
      */
     protected array $children;
+
     protected SourceInterface $source;
 
     public function __construct(
         protected SchemaInterface $ormSchema,
         protected SourceProviderInterface $sourceProvider,
         protected FactoryInterface $factory,
-        protected string $target
+        protected string $target,
     ) {
         $this->children = $this->ormSchema->getInheritedRoles($target);
         $this->source = $this->sourceProvider->getSource($target);
-    }
-
-    final public function __destruct()
-    {
-        unset($this->parent, $this->inherit, $this->subclasses, $this->load, $this->join);
-    }
-
-    /**
-     * Ensure state of every nested loader.
-     */
-    public function __clone()
-    {
-        $this->parent = null;
-
-        foreach ($this->load as $name => $loader) {
-            $this->load[$name] = $loader->withContext($this);
-        }
-
-        foreach ($this->join as $name => $loader) {
-            $this->join[$name] = $loader->withContext($this);
-        }
-
-        $this->inherit = $this->inherit?->withContext($this);
-
-        foreach ($this->subclasses as $i => $loader) {
-            $this->subclasses[$i] = $loader->withContext($this);
-        }
     }
 
     public function isHierarchical(): bool
@@ -141,13 +115,13 @@ abstract class AbstractLoader implements LoaderInterface
     public function withContext(LoaderInterface $parent, array $options = []): static
     {
         // check that given options are known
-        if (!empty($wrong = array_diff(array_keys($options), array_keys($this->options)))) {
+        if (!empty($wrong = \array_diff(\array_keys($options), \array_keys($this->options)))) {
             throw new LoaderException(
-                sprintf(
+                \sprintf(
                     'Relation %s does not support option: %s',
                     $this::class,
-                    implode(',', $wrong)
-                )
+                    \implode(',', $wrong),
+                ),
             );
         }
 
@@ -167,9 +141,8 @@ abstract class AbstractLoader implements LoaderInterface
      * @param bool   $join     When set to true loaders will be forced into JOIN mode.
      * @param bool   $load     Load relation data.
      *
-     * @throws LoaderException
-     *
      * @return LoaderInterface Must return loader for a requested relation.
+     * @throws LoaderException
      */
     public function loadRelation(
         string|LoaderInterface $relation,
@@ -220,7 +193,7 @@ abstract class AbstractLoader implements LoaderInterface
         }
 
         if ($join) {
-            if (empty($options['method']) || !in_array($options['method'], [self::JOIN, self::LEFT_JOIN], true)) {
+            if (empty($options['method']) || !\in_array($options['method'], [self::JOIN, self::LEFT_JOIN], true)) {
                 // let's tell our loaded that it's method is JOIN (forced)
                 $options['method'] = self::JOIN;
             }
@@ -232,16 +205,16 @@ abstract class AbstractLoader implements LoaderInterface
                 $this->ormSchema,
                 $this->sourceProvider,
                 $this->target,
-                $relation
+                $relation,
             );
         } catch (SchemaException | FactoryException $e) {
             if ($this->inherit instanceof self) {
                 return $this->inherit->loadRelation($relation, $options, $join, $load, $alias);
             }
             throw new LoaderException(
-                sprintf('Unable to create loader: %s', $e->getMessage()),
+                \sprintf('Unable to create loader: %s', $e->getMessage()),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
 
@@ -296,6 +269,33 @@ abstract class AbstractLoader implements LoaderInterface
      * Indicates that loader loads data.
      */
     abstract public function isLoaded(): bool;
+
+    /**
+     * Ensure state of every nested loader.
+     */
+    public function __clone()
+    {
+        $this->parent = null;
+
+        foreach ($this->load as $name => $loader) {
+            $this->load[$name] = $loader->withContext($this);
+        }
+
+        foreach ($this->join as $name => $loader) {
+            $this->join[$name] = $loader->withContext($this);
+        }
+
+        $this->inherit = $this->inherit?->withContext($this);
+
+        foreach ($this->subclasses as $i => $loader) {
+            $this->subclasses[$i] = $loader->withContext($this);
+        }
+    }
+
+    final public function __destruct()
+    {
+        unset($this->parent, $this->inherit, $this->subclasses, $this->load, $this->join);
+    }
 
     protected function loadChild(AbstractNode $node, bool $includeRole = false): void
     {
@@ -389,7 +389,7 @@ abstract class AbstractLoader implements LoaderInterface
     /**
      * Returns list of relations to be automatically joined with parent object.
      */
-    protected function getEagerLoaders(string $role = null): \Generator
+    protected function getEagerLoaders(?string $role = null): \Generator
     {
         $role ??= $this->target;
         $parentLoader = $this->generateParentLoader($role);

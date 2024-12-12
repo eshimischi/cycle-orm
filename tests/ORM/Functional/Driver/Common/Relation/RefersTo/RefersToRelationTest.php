@@ -20,28 +20,6 @@ abstract class RefersToRelationTest extends BaseTest
 {
     use TableTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->makeTable('user', [
-            'id' => 'primary',
-            'email' => 'string',
-            'balance' => 'float',
-            'comment_id' => 'integer,nullable',
-        ]);
-
-        $this->makeTable('comment', [
-            'id' => 'primary',
-            'user_id' => 'integer',
-            'message' => 'string',
-        ], [
-            'user_id' => ['table' => 'user', 'column' => 'id'],
-        ]);
-
-        $this->orm = $this->withSchema(new Schema($this->getSchemaArray()));
-    }
-
     public function testCreateUserWithDoubleReference(): void
     {
         $u = new User();
@@ -236,8 +214,30 @@ abstract class RefersToRelationTest extends BaseTest
 
         $this->assertInstanceOf(
             Relation\BelongsTo::class,
-            $this->orm->getRelationMap(User::class)->getRelations()['lastComment']
+            $this->orm->getRelationMap(User::class)->getRelations()['lastComment'],
         );
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->makeTable('user', [
+            'id' => 'primary',
+            'email' => 'string',
+            'balance' => 'float',
+            'comment_id' => 'integer,nullable',
+        ]);
+
+        $this->makeTable('comment', [
+            'id' => 'primary',
+            'user_id' => 'integer',
+            'message' => 'string',
+        ], [
+            'user_id' => ['table' => 'user', 'column' => 'id'],
+        ]);
+
+        $this->orm = $this->withSchema(new Schema($this->getSchemaArray()));
     }
 
     private function getSchemaArray(): array

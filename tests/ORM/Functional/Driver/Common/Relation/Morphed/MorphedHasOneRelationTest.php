@@ -20,62 +20,6 @@ abstract class MorphedHasOneRelationTest extends BaseTest
 {
     use TableTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->makeTable('user', [
-            'id' => 'primary',
-            'email' => 'string',
-            'balance' => 'float',
-        ]);
-
-        $this->getDatabase()->table('user')->insertMultiple(
-            ['email', 'balance'],
-            [
-                ['hello@world.com', 100],
-                ['another@world.com', 200],
-            ]
-        );
-
-        $this->makeTable('post', [
-            'id' => 'primary',
-            'user_id' => 'integer,nullable',
-            'title' => 'string',
-            'content' => 'string',
-        ]);
-
-        $this->getDatabase()->table('post')->insertMultiple(
-            ['title', 'user_id', 'content'],
-            [
-                ['post 1', 1, 'post 1 body'],
-                ['post 2', 1, 'post 2 body'],
-                ['post 3', 2, 'post 3 body'],
-                ['post 4', 2, 'post 4 body'],
-            ]
-        );
-
-        $this->makeTable('image', [
-            'id' => 'primary',
-            'parent_id' => 'integer',
-            'parent_type' => 'string',
-            'url' => 'string',
-        ]);
-
-        $this->getDatabase()->table('image')->insertMultiple(
-            ['parent_id', 'parent_type', 'url'],
-            [
-                [1, 'user', 'user-image.png'],
-                [1, 'post', 'post-image.png'],
-                [2, 'user', 'user-2-image.png'],
-                [2, 'post', 'post-2-image.png'],
-                [3, 'post', 'post-3-image.png'],
-            ]
-        );
-
-        $this->orm = $this->withSchema(new Schema($this->getSchemaArray()));
-    }
-
     public function testFetchRelation(): void
     {
         $selector = new Select($this->orm, User::class);
@@ -164,8 +108,8 @@ abstract class MorphedHasOneRelationTest extends BaseTest
     {
         $selector = new Select($this->orm, User::class);
         $selector->load('image')
-                 ->load('posts.image')
-                 ->orderBy('user.id');
+            ->load('posts.image')
+            ->orderBy('user.id');
 
 
         $this->assertEquals([
@@ -491,6 +435,62 @@ abstract class MorphedHasOneRelationTest extends BaseTest
 
         $this->assertSame('post-2-image.png', $u->image->url);
         $this->assertSame('user-image.png', $p->image->url);
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->makeTable('user', [
+            'id' => 'primary',
+            'email' => 'string',
+            'balance' => 'float',
+        ]);
+
+        $this->getDatabase()->table('user')->insertMultiple(
+            ['email', 'balance'],
+            [
+                ['hello@world.com', 100],
+                ['another@world.com', 200],
+            ],
+        );
+
+        $this->makeTable('post', [
+            'id' => 'primary',
+            'user_id' => 'integer,nullable',
+            'title' => 'string',
+            'content' => 'string',
+        ]);
+
+        $this->getDatabase()->table('post')->insertMultiple(
+            ['title', 'user_id', 'content'],
+            [
+                ['post 1', 1, 'post 1 body'],
+                ['post 2', 1, 'post 2 body'],
+                ['post 3', 2, 'post 3 body'],
+                ['post 4', 2, 'post 4 body'],
+            ],
+        );
+
+        $this->makeTable('image', [
+            'id' => 'primary',
+            'parent_id' => 'integer',
+            'parent_type' => 'string',
+            'url' => 'string',
+        ]);
+
+        $this->getDatabase()->table('image')->insertMultiple(
+            ['parent_id', 'parent_type', 'url'],
+            [
+                [1, 'user', 'user-image.png'],
+                [1, 'post', 'post-image.png'],
+                [2, 'user', 'user-2-image.png'],
+                [2, 'post', 'post-2-image.png'],
+                [3, 'post', 'post-3-image.png'],
+            ],
+        );
+
+        $this->orm = $this->withSchema(new Schema($this->getSchemaArray()));
     }
 
     private function getSchemaArray(): array

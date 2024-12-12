@@ -17,7 +17,6 @@ final class Tuple
     public const TASK_STORE = 0;
     public const TASK_DELETE = 1;
     public const TASK_FORCE_DELETE = 2;
-
     public const STATUS_PREPARING = 0;
     public const STATUS_WAITING = 1;
     public const STATUS_WAITED = 2;
@@ -30,6 +29,7 @@ final class Tuple
     public Node $node;
     public State $state;
     public MapperInterface $mapper;
+
     /**
      * `Null` in case when Entity persisted not deferred. Else cloned State object.
      */
@@ -51,6 +51,5 @@ final class Tuple
             self::STATUS_UNPROCESSED,
         ])]
         public int $status,
-    ) {
-    }
+    ) {}
 }

@@ -13,21 +13,11 @@ use Cycle\ORM\Tests\Fixtures\Enum\TypeStringEnum;
 use Cycle\ORM\Tests\Fixtures\Uuid;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use ReflectionEnum;
 
 class TypecastTest extends TestCase
 {
     private Typecast $typecast;
     private m\LegacyMockInterface|m\MockInterface|DatabaseInterface $db;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->typecast = new Typecast(
-            $this->db = m::mock(DatabaseInterface::class)
-        );
-    }
 
     public function testSetRules(): void
     {
@@ -36,7 +26,7 @@ class TypecastTest extends TestCase
             'guest' => 'bool',
             'bonus' => 'float',
             'date' => 'datetime',
-            'slug' => fn (string $value) => strtolower($value),
+            'slug' => fn(string $value) => strtolower($value),
             'title' => 'strtoupper',
             'test' => [Uuid::class, 'create'],
             'uuid' => 'uuid',
@@ -61,7 +51,7 @@ class TypecastTest extends TestCase
         if (\PHP_VERSION_ID < 80100) {
             return;
         }
-        $getCase = static fn (string $enum, string $case) => (new ReflectionEnum($enum))
+        $getCase = static fn(string $enum, string $case) => (new \ReflectionEnum($enum))
             ->getCase($case)
             ->getValue();
 
@@ -189,5 +179,14 @@ class TypecastTest extends TestCase
         $this->assertSame(json_encode(['foo' => 'bar']), $data['foo']);
         $this->assertSame(['bar' => 'baz'], $data['bar']);
         $this->assertNull($data['baz']);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->typecast = new Typecast(
+            $this->db = m::mock(DatabaseInterface::class),
+        );
     }
 }

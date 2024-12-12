@@ -170,19 +170,6 @@ class HasMany extends AbstractRelation
             : new Reference($this->target, $scope);
     }
 
-    protected function getReferenceScope(Node $node): ?array
-    {
-        $scope = [];
-        $nodeData = $node->getData();
-        foreach ($this->innerKeys as $i => $key) {
-            if (!isset($nodeData[$key])) {
-                return null;
-            }
-            $scope[$this->outerKeys[$i]] = $nodeData[$key];
-        }
-        return $scope;
-    }
-
     public function resolve(ReferenceInterface $reference, bool $load): ?iterable
     {
         if ($reference->hasValue()) {
@@ -197,7 +184,7 @@ class HasMany extends AbstractRelation
             return null;
         }
 
-        $scope = array_merge($reference->getScope(), $this->schema[Relation::WHERE] ?? []);
+        $scope = \array_merge($reference->getScope(), $this->schema[Relation::WHERE] ?? []);
 
         $iterator = (clone $this->select)->where($scope)->getIterator(findInHeap: true);
         $result = \iterator_to_array($iterator, false);
@@ -213,7 +200,7 @@ class HasMany extends AbstractRelation
             throw new \InvalidArgumentException('Collected data in the HasMany relation should be iterable.');
         }
         return $this->factory->collection(
-            $this->schema[Relation::COLLECTION_TYPE] ?? null
+            $this->schema[Relation::COLLECTION_TYPE] ?? null,
         )->collect($data);
     }
 
@@ -231,6 +218,19 @@ class HasMany extends AbstractRelation
         return \is_array($data) ? $data : [];
     }
 
+    protected function getReferenceScope(Node $node): ?array
+    {
+        $scope = [];
+        $nodeData = $node->getData();
+        foreach ($this->innerKeys as $i => $key) {
+            if (!isset($nodeData[$key])) {
+                return null;
+            }
+            $scope[$this->outerKeys[$i]] = $nodeData[$key];
+        }
+        return $scope;
+    }
+
     /**
      * Return objects which are subject of removal.
      */
@@ -238,11 +238,11 @@ class HasMany extends AbstractRelation
     {
         $related = $this->extract($related);
         $original = $this->extract($original);
-        return array_udiff(
+        return \array_udiff(
             $original ?? [],
             $related,
             // static fn(object $a, object $b): int => strcmp(spl_object_hash($a), spl_object_hash($b))
-            static fn (object $a, object $b): int => (int)($a === $b) - 1
+            static fn(object $a, object $b): int => (int) ($a === $b) - 1,
         );
     }
 }

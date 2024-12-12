@@ -27,7 +27,7 @@ interface FactoryInterface extends DatabaseProviderInterface, CoreFactory
      */
     public function mapper(
         ORMInterface $orm,
-        string $role
+        string $role,
     ): MapperInterface;
 
     /**
@@ -37,7 +37,7 @@ interface FactoryInterface extends DatabaseProviderInterface, CoreFactory
         SchemaInterface $schema,
         SourceProviderInterface $sourceProvider,
         string $role,
-        string $relation
+        string $relation,
     ): LoaderInterface;
 
     /**
@@ -47,7 +47,7 @@ interface FactoryInterface extends DatabaseProviderInterface, CoreFactory
         ORMInterface $orm,
         SchemaInterface $schema,
         string $role,
-        ?Select $select
+        ?Select $select,
     ): RepositoryInterface;
 
     /**
@@ -56,7 +56,7 @@ interface FactoryInterface extends DatabaseProviderInterface, CoreFactory
     public function typecast(
         SchemaInterface $schema,
         DatabaseInterface $database,
-        string $role
+        string $role,
     ): ?TypecastInterface;
 
     /**
@@ -64,7 +64,7 @@ interface FactoryInterface extends DatabaseProviderInterface, CoreFactory
      */
     public function source(
         SchemaInterface $schema,
-        string $role
+        string $role,
     ): SourceInterface;
 
     /**
@@ -72,7 +72,7 @@ interface FactoryInterface extends DatabaseProviderInterface, CoreFactory
      *        Can be class name or alias that can be configured in the {@see withCollectionFactory()} method.
      */
     public function collection(
-        string $name = null
+        ?string $name = null,
     ): CollectionFactoryInterface;
 
     /**
@@ -82,7 +82,7 @@ interface FactoryInterface extends DatabaseProviderInterface, CoreFactory
         ORMInterface $orm,
         SchemaInterface $schema,
         string $role,
-        string $relation
+        string $relation,
     ): RelationInterface;
 
     /**
@@ -99,6 +99,6 @@ interface FactoryInterface extends DatabaseProviderInterface, CoreFactory
     public function withCollectionFactory(
         string $alias,
         CollectionFactoryInterface $factory,
-        string $interface = null
+        ?string $interface = null,
     ): self;
 }
