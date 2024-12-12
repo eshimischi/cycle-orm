@@ -33,7 +33,6 @@ final class RootLoader extends AbstractLoader
         'load' => true,
         'scope' => true,
     ];
-
     private SelectQuery $query;
 
     /**

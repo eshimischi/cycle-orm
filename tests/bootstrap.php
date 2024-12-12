@@ -13,7 +13,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $drivers = [
     'sqlite' => new Config\SQLiteDriverConfig(
         queryCache: true,
-        options:[
+        options: [
             'logQueryParameters' => true,
         ],
     ),
@@ -49,7 +49,7 @@ $drivers = [
         connection: new Config\SQLServer\DsnConnectionConfig(
             'sqlsrv:Server=127.0.0.1,11433;Database=tempdb;TrustServerCertificate=true',
             user: 'SA',
-            password: 'YourStrong!Passw0rd'
+            password: 'YourStrong!Passw0rd',
         ),
         queryCache: true,
         options: [
@@ -66,5 +66,5 @@ $db = getenv('DB') ?: null;
 ] + (
     $db === null
         ? $drivers
-        : array_intersect_key($drivers, array_flip((array)$db))
+        : array_intersect_key($drivers, array_flip((array) $db))
 );

@@ -22,30 +22,6 @@ abstract class UnitOfWorkTest extends BaseTest
 {
     use TableTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->makeTable('post', [
-            'id' => 'primary',
-            'title' => 'string',
-            'content' => 'string',
-        ]);
-
-        $this->orm = $this->withSchema(new Schema([
-            Post::class => [
-                SchemaInterface::ROLE => 'post',
-                SchemaInterface::MAPPER => Mapper::class,
-                SchemaInterface::DATABASE => 'default',
-                SchemaInterface::TABLE => 'post',
-                SchemaInterface::PRIMARY_KEY => 'id',
-                SchemaInterface::COLUMNS => ['id', 'title', 'content'],
-                SchemaInterface::SCHEMA => [],
-                SchemaInterface::RELATIONS => [],
-            ],
-        ]));
-    }
-
     public function testSuccessRetry(): void
     {
         $eow = new UnitOfWork($this->orm, Runner::outerTransaction());
@@ -193,7 +169,7 @@ abstract class UnitOfWorkTest extends BaseTest
         // Node outside the transaction - the state not changed
         $this->assertSame(
             ['title' => 'Title2', 'content' => 'Test2'],
-            $this->orm->getHeap()->get($post2)->getState()->getData()
+            $this->orm->getHeap()->get($post2)->getState()->getData(),
         );
     }
 
@@ -221,5 +197,29 @@ abstract class UnitOfWorkTest extends BaseTest
 
         $this->expectException(SuccessTransactionRetryException::class);
         $result->retry();
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->makeTable('post', [
+            'id' => 'primary',
+            'title' => 'string',
+            'content' => 'string',
+        ]);
+
+        $this->orm = $this->withSchema(new Schema([
+            Post::class => [
+                SchemaInterface::ROLE => 'post',
+                SchemaInterface::MAPPER => Mapper::class,
+                SchemaInterface::DATABASE => 'default',
+                SchemaInterface::TABLE => 'post',
+                SchemaInterface::PRIMARY_KEY => 'id',
+                SchemaInterface::COLUMNS => ['id', 'title', 'content'],
+                SchemaInterface::SCHEMA => [],
+                SchemaInterface::RELATIONS => [],
+            ],
+        ]));
     }
 }
