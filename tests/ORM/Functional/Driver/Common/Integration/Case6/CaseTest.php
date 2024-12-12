@@ -44,7 +44,9 @@ abstract class CaseTest extends BaseTest
             ->fetchOne();
 
         $this->assertSame('foo', $model->getLogin());
-        $this->expectException(\Exception::class);
+        $this->expectException(\Error::class);
+        $this->expectExceptionMessage('Cannot access non-public property ' . User::class . '::$login');
+
         $model->login = 'new login';
     }
 }

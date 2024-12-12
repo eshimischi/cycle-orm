@@ -57,9 +57,15 @@ trait EntityProxyTrait
     public function __set(string $name, $value): void
     {
         if (!\array_key_exists($name, $this->__cycle_orm_rel_map->getRelations())) {
-            if (\method_exists(parent::class, '__set')) {
-                parent::__set($name, $value);
+            if (!\method_exists(parent::class, '__set')) {
+                throw new \Error(\sprintf(
+                    'Cannot access non-public property %s::$%s',
+                    \get_parent_class(static::class),
+                    $name,
+                ));
             }
+
+            parent::__set($name, $value);
             return;
         }
 
