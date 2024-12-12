@@ -74,6 +74,8 @@
         "cs:fix": "php-cs-fixer fix -v",
         "psalm": "psalm",
         "psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
-        "test": "phpunit --color=always"
+        "test": "phpunit --color=always",
+        "test:unit": "phpunit --exclude-group driver --colors=always",
+        "test:sqlite": "phpunit --group driver-sqlite --colors=always"
     }
 }
