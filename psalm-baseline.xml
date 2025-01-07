@@ -297,6 +297,9 @@
             ],
         )]]></code>
     </LessSpecificReturnStatement>
+    <MethodSignatureMismatch>
+      <code>$alias</code>
+    </MethodSignatureMismatch>
     <MixedArgument>
       <code>$class</code>
       <code>$class</code>
