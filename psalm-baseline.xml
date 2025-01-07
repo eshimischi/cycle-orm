@@ -229,8 +229,8 @@
   </file>
   <file src="src/Config/RelationConfig.php">
     <TooManyArguments>
-      <code><![CDATA[new Autowire($this->config[$type][self::LOADER])]]></code>
-      <code><![CDATA[new Autowire($this->config[$type][self::RELATION])]]></code>
+      <code>new Autowire($loader)</code>
+      <code>new Autowire($relation)</code>
     </TooManyArguments>
   </file>
   <file src="src/EntityManager.php">
@@ -297,9 +297,6 @@
             ],
         )]]></code>
     </LessSpecificReturnStatement>
-    <MethodSignatureMismatch>
-      <code>$alias</code>
-    </MethodSignatureMismatch>
     <MixedArgument>
       <code>$class</code>
       <code>$class</code>

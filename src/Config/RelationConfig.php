@@ -61,19 +61,21 @@ final class RelationConfig extends InjectableConfig
 
     public function getLoader(int|string $type): Autowire
     {
-        if (!isset($this->config[$type][self::LOADER])) {
-            throw new ConfigException("Unable to get relation loader `{$type}`.");
-        }
+        $loader = $this->config[$type][self::LOADER] ?? throw new ConfigException(
+            "Unable to get relation loader `{$type}`.",
+        );
 
-        return new Autowire($this->config[$type][self::LOADER]);
+        \assert(\is_string($loader) && $loader !== '');
+        return new Autowire($loader);
     }
 
     public function getRelation(int|string $type): Autowire
     {
-        if (!isset($this->config[$type][self::RELATION])) {
-            throw new ConfigException("Unable to get relation `{$type}`.");
-        }
+        $relation = $this->config[$type][self::RELATION] ?? throw new ConfigException(
+            "Unable to get relation `{$type}`.",
+        );
 
-        return new Autowire($this->config[$type][self::RELATION]);
+        \assert(\is_string($relation) && $relation !== '');
+        return new Autowire($relation);
     }
 }
