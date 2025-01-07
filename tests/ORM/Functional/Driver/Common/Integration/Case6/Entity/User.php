@@ -16,7 +16,7 @@ class User
 
     public function getId(): ?string
     {
-        return $this->id === null ? null : (string)$this->id;
+        return $this->id === null ? null : (string) $this->id;
     }
 
     public function getLogin(): string

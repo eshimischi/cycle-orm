@@ -15,6 +15,20 @@ abstract class CaseTest extends BaseTest
     use IntegrationTestTrait;
     use TableTrait;
 
+    public function testSelect(): void
+    {
+        /** @var User $model */
+        $model = (new Select($this->orm, User::class))
+            ->wherePK(1)
+            ->fetchOne();
+
+        $this->assertSame('foo', $model->getLogin());
+        $this->expectException(\Error::class);
+        $this->expectExceptionMessage('Cannot access non-public property ' . User::class . '::$login');
+
+        $model->login = 'new login';
+    }
+
     public function setUp(): void
     {
         // Init DB
@@ -34,19 +48,5 @@ abstract class CaseTest extends BaseTest
                 [1, 'foo'],
             ],
         );
-    }
-
-    public function testSelect(): void
-    {
-        /** @var User $model */
-        $model = (new Select($this->orm,User::class))
-            ->wherePK(1)
-            ->fetchOne();
-
-        $this->assertSame('foo', $model->getLogin());
-        $this->expectException(\Error::class);
-        $this->expectExceptionMessage('Cannot access non-public property ' . User::class . '::$login');
-
-        $model->login = 'new login';
     }
 }
