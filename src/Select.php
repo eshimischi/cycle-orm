@@ -136,7 +136,7 @@ class Select implements \IteratorAggregate, \Countable, PaginableInterface
     /**
      * Attention, column will be quoted by driver!
      *
-     * @param string|null $column When column is null DISTINCT(PK) will be generated.
+     * @param non-empty-string|null $column When column is null DISTINCT(PK) will be generated.
      */
     public function count(?string $column = null): int
     {
