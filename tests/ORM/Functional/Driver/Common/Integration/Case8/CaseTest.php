@@ -70,6 +70,7 @@ abstract class CaseTest extends BaseTest
 
     /** Two UUID7 values sharing the same time prefix — i.e. the same logical "parent" / partition. */
     private const PARENT_A = '0191b6e0-0000-7000-8000-000000000001';
+
     private const PARENT_B = '0191b6e0-0000-7000-8000-000000000002';
 
     /**
